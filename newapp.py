@@ -16,7 +16,7 @@ st.set_page_config(
 st.markdown("""
     <style>
         .stApp {
-            background-image: url("https://raw.githubusercontent.com/leonadsouza28/new_machine_learning/refs/heads/main/LP_image.png");
+            background-image: url("https://github.com/leonadsouza28/LOAN-APPROVAL-PREDICTION/blob/main/LP_image.png");
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -113,42 +113,48 @@ if predict:
     if any(f == '' for f in required_fields):
         st.warning("⚠️ Please fill in all fields before predicting.")
     else:
-        # Step 1: Create raw input DataFrame
-        input_dict = {
-            'Gender': [Gender],
-            'Married': [Married],
-            'Dependents': [Dependents],
-            'Education': [Education],
-            'Self_Employed': [Self_Employed],
-            'ApplicantIncome': [ApplicantIncome],
-            'CoapplicantIncome': [CoapplicantIncome],
-            'LoanAmount': [int(LoanAmount)],
-            'Loan_Amount_Term': [int(Loan_Amount_Term)],
-            'Credit_History': [int(Credit_History)],
-            'Property_Area': [Property_Area]
-        }
-        input_df = pd.DataFrame(input_dict)
-
-        # Step 2: Encode categorical binary columns
-        le = LabelEncoder()
-        for col in ['Gender', 'Married', 'Education', 'Self_Employed']:
-            input_df[col] = le.fit_transform(input_df[col])
-
-        # Step 3: One-hot encode multi-class features
-        input_df = pd.get_dummies(input_df, columns=['Dependents', 'Property_Area'], drop_first=True)
-
-        # Step 4: Align with training columns
-        input_df = input_df.reindex(columns=model_columns, fill_value=0)
-
-        # Step 5: Scale input
-        input_scaled = scaler.transform(input_df)
-
-        # Step 6: Predict
-        prediction = model.predict(input_scaled)[0]
-        prediction_proba = model.predict_proba(input_scaled)[0][1]
-
-        # Step 7: Output
-        if prediction == 1:
-            st.success(f"✅ Loan will be Approved (Confidence: {prediction_proba:.2%})")
+        # Custom Loan Amount Validation
+        if int(LoanAmount) < 1000:
+            st.warning("⚠️ Loan Amount must be at least 1,000.")
+        elif int(LoanAmount) <= (ApplicantIncome + CoapplicantIncome):
+            st.warning("⚠️ Loan Amount must be greater than the total income (Applicant + Coapplicant).")
         else:
-            st.error(f"❌ Loan will NOT be Approved (Confidence: {1 - prediction_proba:.2%})")
+            # Step 1: Create raw input DataFrame
+            input_dict = {
+                'Gender': [Gender],
+                'Married': [Married],
+                'Dependents': [Dependents],
+                'Education': [Education],
+                'Self_Employed': [Self_Employed],
+                'ApplicantIncome': [ApplicantIncome],
+                'CoapplicantIncome': [CoapplicantIncome],
+                'LoanAmount': [int(LoanAmount)],
+                'Loan_Amount_Term': [int(Loan_Amount_Term)],
+                'Credit_History': [int(Credit_History)],
+                'Property_Area': [Property_Area]
+            }
+            input_df = pd.DataFrame(input_dict)
+
+            # Step 2: Encode categorical binary columns
+            le = LabelEncoder()
+            for col in ['Gender', 'Married', 'Education', 'Self_Employed']:
+                input_df[col] = le.fit_transform(input_df[col])
+
+            # Step 3: One-hot encode multi-class features
+            input_df = pd.get_dummies(input_df, columns=['Dependents', 'Property_Area'], drop_first=True)
+
+            # Step 4: Align with training columns
+            input_df = input_df.reindex(columns=model_columns, fill_value=0)
+
+            # Step 5: Scale input
+            input_scaled = scaler.transform(input_df)
+
+            # Step 6: Predict
+            prediction = model.predict(input_scaled)[0]
+            prediction_proba = model.predict_proba(input_scaled)[0][1]
+
+            # Step 7: Output
+            if prediction == 1:
+                st.success(f"✅ Loan will be Approved (Confidence: {prediction_proba:.2%})")
+            else:
+                st.error(f"❌ Loan will NOT be Approved (Confidence: {1 - prediction_proba:.2%})")
