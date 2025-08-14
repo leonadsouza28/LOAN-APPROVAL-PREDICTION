@@ -69,6 +69,18 @@ st.markdown("""
             color: black !important;
             font-weight: bold;
         }
+        /* 🌑 Darken prediction boxes */
+        div["data-testid="stSuccess"], div["data-testid="stError"] {
+            background-color: rgba(0, 0, 0, 0.8) !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+            margin-top: 10px !important;
+        }
+        div["data-testid="stSuccess"] * , div["data-testid="stError"] * {
+            color: white !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
