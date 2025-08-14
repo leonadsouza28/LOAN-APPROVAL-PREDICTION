@@ -96,7 +96,7 @@ with st.form(key="input_form"):
     with col2:
         ApplicantIncome = st.number_input("Applicant Income", min_value=0)
         CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
-        LoanAmount = st.selectbox("Loan Amount (in thousands)", [''] + list(range(1, 1000000)))
+        LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
         Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
         Credit_History = st.selectbox("Credit History", ['', '1', '0'])
         Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
