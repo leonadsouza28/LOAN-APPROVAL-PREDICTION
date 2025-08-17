@@ -164,12 +164,18 @@ if predict:
             # Step 5: Scale input
             input_scaled = scaler.transform(input_df)
 
-            # Step 6: Predict
-            prediction = model.predict(input_scaled)[0]
-            prediction_proba = model.predict_proba(input_scaled)[0][1]
+            # Get probability of prediction
+            prediction_proba = model.predict_proba(input_data)
 
-            # Step 7: Output
+            # Probability of being approved (class = 1)
+            confidence = prediction_proba[0][1] * 100  
+
+            # Prevent showing exact 100.00%
+            if confidence == 100:
+                confidence = 99.99  
+
+            # Show prediction
             if prediction == 1:
-                st.success(f"✅ Loan will be Approved (Confidence: {prediction_proba:.2%})")
+                st.success(f"✅ Loan will be Approved (Confidence: {confidence:.4f}%)")
             else:
-                st.error(f"❌ Loan will NOT be Approved (Confidence: {1 - prediction_proba:.2%})")
+                st.error(f"❌ Loan will NOT be Approved (Confidence: {100 - confidence:.4f}%)")
