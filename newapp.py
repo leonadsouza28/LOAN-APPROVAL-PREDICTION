@@ -165,14 +165,17 @@ if predict:
             input_scaled = scaler.transform(input_df)
 
             # Get probability of prediction
-            prediction_proba = model.predict_proba(input_data)
+            prediction_proba = model.predict_proba(input_scaled)
 
             # Probability of being approved (class = 1)
             confidence = prediction_proba[0][1] * 100  
 
             # Prevent showing exact 100.00%
             if confidence == 100:
-                confidence = 99.99  
+                confidence = 99.99
+
+            # Get prediction (0 = Not Approved, 1 = Approved)
+            prediction = model.predict(input_scaled)[0]    
 
             # Show prediction
             if prediction == 1:
