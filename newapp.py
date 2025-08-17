@@ -69,6 +69,18 @@ st.markdown("""
             color: black !important;
             font-weight: bold;
         }
+        /* 🌑 Darken prediction boxes */
+        div["data-testid="stSuccess"], div["data-testid="stError"] {
+            background-color: rgba(0, 0, 0, 0.8) !important;
+            color: white !important;
+            border: 1px solid white !important;
+            border-radius: 8px !important;
+            padding: 15px !important;
+            margin-top: 10px !important;
+        }
+        div["data-testid="stSuccess"] * , div["data-testid="stError"] * {
+            color: white !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -82,21 +94,24 @@ st.markdown('<div class="main">', unsafe_allow_html=True)
 st.markdown('<div class="title">LOAN APPROVAL PREDICTION</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Predict whether a loan will be approved based on applicant information.</div>', unsafe_allow_html=True)
 
-# --- Input Form (Top-to-Bottom) ---
+# --- Input Form ---
 with st.form(key="input_form"):
+    col1, col2 = st.columns(2)
 
-    Gender = st.selectbox("Gender", ['', 'Male', 'Female', 'Other'])
-    Married = st.selectbox("Married", ['', 'Yes', 'No'])
-    Dependents = st.selectbox("Number of Dependents", ['', '0', '1', '2', '3+'])
-    Education = st.selectbox("Education", ['', 'Graduate', 'Not Graduate'])
-    Self_Employed = st.selectbox("Self Employed", ['', 'Yes', 'No'])
+    with col1:
+        Gender = st.selectbox("Gender", ['', 'Male', 'Female', 'Other'])
+        Married = st.selectbox("Married", ['', 'Yes', 'No'])
+        Dependents = st.selectbox("Number of Dependents", ['', '0', '1', '2', '3+'])
+        Education = st.selectbox("Education", ['', 'Graduate', 'Not Graduate'])
+        Self_Employed = st.selectbox("Self Employed", ['', 'Yes', 'No'])
 
-    ApplicantIncome = st.number_input("Applicant Income", min_value=0)
-    CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
-    LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
-    Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
-    Credit_History = st.selectbox("Credit History", ['', '1', '0'])
-    Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
+    with col2:
+        ApplicantIncome = st.number_input("Applicant Income", min_value=0)
+        CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
+        LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
+        Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
+        Credit_History = st.selectbox("Credit History", ['', '1', '0'])
+        Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
 
     # Submit button
     st.markdown('<div class="center-button">', unsafe_allow_html=True)
