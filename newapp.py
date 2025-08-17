@@ -69,18 +69,6 @@ st.markdown("""
             color: black !important;
             font-weight: bold;
         }
-        /* 🌑 Darken prediction boxes */
-        div["data-testid="stSuccess"], div["data-testid="stError"] {
-            background-color: rgba(0, 0, 0, 0.8) !important;
-            color: white !important;
-            border: 1px solid white !important;
-            border-radius: 8px !important;
-            padding: 15px !important;
-            margin-top: 10px !important;
-        }
-        div["data-testid="stSuccess"] * , div["data-testid="stError"] * {
-            color: white !important;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -94,24 +82,21 @@ st.markdown('<div class="main">', unsafe_allow_html=True)
 st.markdown('<div class="title">LOAN APPROVAL PREDICTION</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Predict whether a loan will be approved based on applicant information.</div>', unsafe_allow_html=True)
 
-# --- Input Form ---
+# --- Input Form (Top-to-Bottom) ---
 with st.form(key="input_form"):
-    col1, col2 = st.columns(2)
 
-    with col1:
-        Gender = st.selectbox("Gender", ['', 'Male', 'Female', 'Other'])
-        Married = st.selectbox("Married", ['', 'Yes', 'No'])
-        Dependents = st.selectbox("Number of Dependents", ['', '0', '1', '2', '3+'])
-        Education = st.selectbox("Education", ['', 'Graduate', 'Not Graduate'])
-        Self_Employed = st.selectbox("Self Employed", ['', 'Yes', 'No'])
+    Gender = st.selectbox("Gender", ['', 'Male', 'Female', 'Other'])
+    Married = st.selectbox("Married", ['', 'Yes', 'No'])
+    Dependents = st.selectbox("Number of Dependents", ['', '0', '1', '2', '3+'])
+    Education = st.selectbox("Education", ['', 'Graduate', 'Not Graduate'])
+    Self_Employed = st.selectbox("Self Employed", ['', 'Yes', 'No'])
 
-    with col2:
-        ApplicantIncome = st.number_input("Applicant Income", min_value=0)
-        CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
-        LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
-        Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
-        Credit_History = st.selectbox("Credit History", ['', '1', '0'])
-        Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
+    ApplicantIncome = st.number_input("Applicant Income", min_value=0)
+    CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
+    LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
+    Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
+    Credit_History = st.selectbox("Credit History", ['', '1', '0'])
+    Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
 
     # Submit button
     st.markdown('<div class="center-button">', unsafe_allow_html=True)
@@ -126,15 +111,11 @@ if predict:
         st.warning("⚠️ Please fill in all fields before predicting.")
     else:
         # Custom Loan Amount Validation
-        # Custom Loan Amount Validation
         if int(LoanAmount) < 1000:
-             st.warning("⚠️ Loan Amount must be at least 1,000.")
-
-        elif int(LoanAmount) > 2 * (ApplicantIncome + CoapplicantIncome): # Example: 2x total income
-             st.warning("⚠️ Loan Amount is excessively high relative to total income and will not be approved.")
-
+            st.warning("⚠️ Loan Amount must be at least 1,000.")
+        elif int(LoanAmount) <= (ApplicantIncome + CoapplicantIncome):
+            st.warning("⚠️ Loan Amount must be greater than the total income (Applicant + Coapplicant).")
         else:
- 
             # Step 1: Create raw input DataFrame
             input_dict = {
                 'Gender': [Gender],
