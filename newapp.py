@@ -126,11 +126,15 @@ if predict:
         st.warning("⚠️ Please fill in all fields before predicting.")
     else:
         # Custom Loan Amount Validation
+        # Custom Loan Amount Validation
         if int(LoanAmount) < 1000:
-            st.warning("⚠️ Loan Amount must be at least 1,000.")
-        elif int(LoanAmount) <= (ApplicantIncome + CoapplicantIncome):
-            st.warning("⚠️ Loan Amount must be greater than the total income (Applicant + Coapplicant).")
+             st.warning("⚠️ Loan Amount must be at least 1,000.")
+
+        elif int(LoanAmount) > 2 * (ApplicantIncome + CoapplicantIncome): # Example: 2x total income
+             st.warning("⚠️ Loan Amount is excessively high relative to total income and will not be approved.")
+
         else:
+ 
             # Step 1: Create raw input DataFrame
             input_dict = {
                 'Gender': [Gender],
