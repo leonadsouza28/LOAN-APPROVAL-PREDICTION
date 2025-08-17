@@ -108,7 +108,10 @@ with st.form(key="input_form"):
     with col2:
         ApplicantIncome = st.number_input("Applicant Income", min_value=0)
         CoapplicantIncome = st.number_input("Coapplicant Income", min_value=0)
-        LoanAmount = st.number_input("Loan Amount (in thousands)", min_value=1, step=1)
+        LoanAmount = st.number_input("Loan Amount (in Rupees)", min_value=0, step=1000)
+        # Convert to thousands for the model
+        LoanAmount_thousands = LoanAmount / 1000
+
         Loan_Amount_Term = st.selectbox("Loan Term (in years)", [''] + list(range(1, 1001)))
         Credit_History = st.selectbox("Credit History", ['', '1', '0'])
         Property_Area = st.selectbox("Property Area", ['', 'Urban', 'Semiurban', 'Rural'])
@@ -140,7 +143,7 @@ if predict:
                 'Self_Employed': [Self_Employed],
                 'ApplicantIncome': [ApplicantIncome],
                 'CoapplicantIncome': [CoapplicantIncome],
-                'LoanAmount': [int(LoanAmount)],
+                'LoanAmount': [LoanAmount_thousands],
                 'Loan_Amount_Term': [int(Loan_Amount_Term)],
                 'Credit_History': [int(Credit_History)],
                 'Property_Area': [Property_Area]
